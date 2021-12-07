@@ -3,12 +3,26 @@ investigated_alphas = [1, 0.05, 0.01, 0.001]
 
 scenarios = ["all", "MSFT_MSFT", "PUBL_MSFT", "intoXX", "fromEN", "ENU",
              "nonWMT", "nonLatin", "nonEnglish", "discussion",
-             "logogram_alphabet", "bootstrap"]
+             "logogram_alphabet"]#, "bootstrap"]
 
-investigated_metrics = ['BERT_SCORE', 'BLEURT_default', 'COMET', 'COMET_src',
-                        'Prism_ref', 'Prism_src', 'SacreBLEU_bleu',
-                        'SacreBLEU_chrf', 'SacreBLEU_ter_neg',
-                        'ExtendedEditDist_neg', 'CharacTER_neg', 'ESIM_']
+# investigated_metrics = ['BERT_SCORE', 'BLEURT_default', 'COMET', 'COMET_src',
+#                         'Prism_ref', 'Prism_src', 'SacreBLEU_bleu',
+#                         'SacreBLEU_chrf', 'SacreBLEU_ter_neg',
+#                         'ExtendedEditDist_neg', 'CharacTER_neg', 'ESIM_']
+
+# these are metrics for which mean(sentence scores) ~= corpus score
+# BLEU is biggest exception, but ter and chrf also fail
+investigated_metrics = [
+ 'COMET',
+ 'COMET_src',
+ 'BERT_SCORE',
+ 'Prism_ref',
+ 'Prism_src',
+ 'BLEURT_default',
+ #'BLEURT_large',
+ 'CharacTER_neg',
+ 'ESIM_'
+]
 
 wmt_langs = ["ENU", "ZHO", "CHS", "CSY", "DEU", "IUS", "JPN", "PLK", "RUS",
              "TAM", "KHM", "PAS", "ENU", "ZHO", "CHS", "CSY", "DEU", "FIN",
@@ -45,3 +59,5 @@ lang_names = {'ENU': 'English', 'FRA': 'French', 'DEU': 'German',
               'FIN': 'Finnish', 'VIT': 'Vietnamese', 'LTH': 'Lithuanian',
               'MLT': 'Maltese', 'TAH': 'Tahitian', 'IRE': 'Irish',
               'SWK': 'Kiswahili', 'TAM': 'Tamil'}
+
+subset_to_human_only = False

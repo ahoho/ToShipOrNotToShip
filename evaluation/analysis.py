@@ -2,7 +2,7 @@ from itertools import combinations
 from scipy.stats import wilcoxon, kendalltau
 from evaluation.tools import get_valid, get_equal_pairs, calculate_accuracy, bootstrap_get_pvalue
 from evaluation.paper_resources import PAPER_MACROS, get_dependent_independent, generate_statistical_tests, generate_multiplot_deltas, generate_multiplot_deltas_excerpt, generate_sys_level_tex
-from evaluation.SETTINGS import investigated_alphas, wmt_langs, logograms, non_latin_langs, investigated_metrics
+from evaluation.SETTINGS import investigated_alphas, wmt_langs, logograms, non_latin_langs, investigated_metrics, subset_to_human_only
 from collections import defaultdict
 from scipy.stats import pearsonr, spearmanr
 import pandas as pd
@@ -76,9 +76,25 @@ def compute_statistics_for_eval(data, bootstrap=None):
             for metric in data[campaign][systempair[0]]['automatic_metrics']:
                 if metric not in investigated_metrics:
                     continue
+                
+                if subset_to_human_only:
+                    auto_data_a = data[campaign][systempair[0]]['hum_only_automatic_metrics']
+                    if isinstance(auto_data_a, dict) and auto_data_a == {}:
+                        auto_data_a = data[campaign][systempair[0]]['automatic_metrics']
+                    if isinstance(auto_data_a, pd.DataFrame):
+                        auto_data_a = auto_data_a.set_index('Unnamed: 0').to_dict()[0]
+                    value_a = auto_data_a[metric]
+                    
+                    auto_data_b = data[campaign][systempair[1]]['hum_only_automatic_metrics']
+                    if isinstance(auto_data_b, dict) and auto_data_b == {}:
+                        auto_data_b = data[campaign][systempair[1]]['automatic_metrics']
+                    if isinstance(auto_data_b, pd.DataFrame):
+                        auto_data_b = auto_data_b.set_index('Unnamed: 0').to_dict()[0]
+                    value_b = auto_data_b[metric]
+                else:
+                    value_a = data[campaign][systempair[0]]['automatic_metrics'][metric]
+                    value_b = data[campaign][systempair[1]]['automatic_metrics'][metric]
 
-                value_a = data[campaign][systempair[0]]['automatic_metrics'][metric]
-                value_b = data[campaign][systempair[1]]['automatic_metrics'][metric]
                 processed_data[metric] = value_a - value_b
 
                 if bootstrap:
