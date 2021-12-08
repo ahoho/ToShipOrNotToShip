@@ -105,9 +105,13 @@ def generate_list_of_languages(data):
 
 def generate_multiplot_deltas_excerpt(df):
     metrics = [['SacreBLEU_bleu', "COMET", 'Prism_ref', 'BLEURT_default']]
-
-    calculate_deltas_multiplot(df, name="metric_deltas_excerpt",
-                               metrics=metrics)
+    metrics = [
+        metric_set for metric_set in metrics
+        if all(m in investigated_metrics for m in metric_set)
+    ]
+    if metrics:
+        calculate_deltas_multiplot(df, name="metric_deltas_excerpt",
+                                    metrics=metrics)
 
 
 def generate_multiplot_deltas(df, name="metric_deltas", language=None):
@@ -115,9 +119,13 @@ def generate_multiplot_deltas(df, name="metric_deltas", language=None):
                ['SacreBLEU_chrf', 'Prism_ref', 'Prism_src'],
                ['SacreBLEU_ter_neg', 'BERT_SCORE', 'BLEURT_default'],
                ['CharacTER_neg', 'ExtendedEditDist_neg', 'ESIM_']]
-
-    calculate_deltas_multiplot(df, name=name, metrics=metrics,
-                               language=language)
+    metrics = [
+        metric_set for metric_set in metrics
+        if all(m in investigated_metrics for m in metric_set)
+    ]
+    if metrics:
+        calculate_deltas_multiplot(df, name=name, metrics=metrics,
+                                language=language)
 
 
 def calculate_deltas_multiplot(df, name, metrics, language=None):
@@ -276,7 +284,6 @@ def get_dependent_independent(statistical_data, scenario):
 
     counter = defaultdict(int)
 
-    bleu = defaultdict(list)
     for data in statistical_data:
         sys_a = data['SystemA'][0:4]
         sys_b = data['SystemB'][0:4]
@@ -296,18 +303,15 @@ def get_dependent_independent(statistical_data, scenario):
         if 'PUBL' == sys_a and 'MSFT' == sys_b:
             if data['SystemA'] != lastpublic or data['SystemB'] != lastmsft:
                 continue
-            bleu["publmsft"].append(data["SacreBLEU_bleu"])
 
             publ_msft[data['Target']].append(
                 (data['campaign'], data['SystemA'], data['SystemB']))
         elif 'PUBL' == sys_a and 'PUBL' == sys_b:
             publ_publ[data['Target']].append(
                 (data['campaign'], data['SystemA'], data['SystemB']))
-            bleu["publpubl"].append(data["SacreBLEU_bleu"])
         elif 'MSFT' == sys_a and 'MSFT' == sys_b:
             msft_msft[data['Target']].append(
                 (data['campaign'], data['SystemA'], data['SystemB']))
-            bleu["msftmsft"].append(data["SacreBLEU_bleu"])
         else:
             counter[(data['SystemA'][0:4], data['SystemB'][0:4])] += 1
 
