@@ -60,4 +60,4 @@ lang_names = {'ENU': 'English', 'FRA': 'French', 'DEU': 'German',
               'MLT': 'Maltese', 'TAH': 'Tahitian', 'IRE': 'Irish',
               'SWK': 'Kiswahili', 'TAM': 'Tamil'}
 
-subset_to_human_only = False
+subset_to_human_only = True
