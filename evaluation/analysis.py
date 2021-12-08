@@ -90,8 +90,9 @@ def compute_statistics_for_eval(data, bootstrap=None):
                 # automatic_metrics: contain system-level metric scores over all sentences
                 # If you are interested in scenario where metrics are compared only on the sentences evaluated by humans, uncomment the following code:
                 #
-                if subset_to_human_only and "hum_only_automatic_metrics" in data[campaign][systempair[0]]:                
+                if subset_to_human_only and data[campaign][systempair[0]]["hum_only_automatic_metrics"]:
                     value_a = data[campaign][systempair[0]]['hum_only_automatic_metrics'][metric]
+                if subset_to_human_only and data[campaign][systempair[1]]["hum_only_automatic_metrics"]:
                     value_b = data[campaign][systempair[1]]['hum_only_automatic_metrics'][metric]
 
                 processed_data[metric] = value_a - value_b
