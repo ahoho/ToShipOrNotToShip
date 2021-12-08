@@ -1,5 +1,6 @@
 .DS_Store
-results
+results*
+*checkpoint.ipynb
 __pycache__
 *.pyc
 *.pickle
